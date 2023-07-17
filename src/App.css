@@ -36,3 +36,70 @@
     transform: rotate(360deg);
   }
 }
+
+/* invoice Page Details */
+
+.background{
+  background-image:linear-gradient(to right, #1F7B6C,#228D7B);
+  height:100vh;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form{
+  background-color:#DBD9DC;
+  width:60%;
+  min-height:80%;
+  margin:auto;
+  padding-left:5%;
+
+
+}
+.inputDesign{
+  
+  max-width:300px;
+  display:flex;
+  justify-content: space-between;
+  
+  
+}
+.buttonBox{
+  
+}
+.form{
+  
+}
+.form{
+  
+}
+.form{
+
+}
+.form{
+  
+}
+.form{
+  
+}
+.form{
+  
+}
+.form{
+  
+}
+.form{
+
+}
+.form{
+  
+}
+.form{
+  
+}
+.form{
+  
+}
+.form{
+  
+}
