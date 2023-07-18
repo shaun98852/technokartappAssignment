@@ -1,6 +1,6 @@
 import {Component} from "react"
 // import Popup from 'reactjs-popup'
-import { DatePicker } from 'antd'
+// import { DatePicker } from 'antd'
 
 
 
@@ -67,11 +67,8 @@ class App extends Component{
   }
 
   savedDate=(event)=>{
-    console.log(event)
-    console.log(event[0].$d.getFullYear())
-    const startYear=event[0].$d.getFullYear()
-    const endYear=event[1].$d.getFullYear()
-    this.setState({enteredDate:[startYear,endYear]})
+    
+    this.setState({enteredDate:event.target.value})
   }
 
   deleteInvoice=async (Item)=>{
@@ -83,12 +80,12 @@ class App extends Component{
   getDetailsOnYear=async()=>{
     const {enteredDate,allDetails}=this.state
     if(enteredDate!=""){
-
+     
+      const requiredDate=enteredDate.split("-")[0]
     
-    const firstYear=enteredDate[0]
-    const endYear=enteredDate[1]
-    const listNew=allDetails.filter(eachItem=>(eachItem.invoiceDate.split("-")[0]==firstYear) || (eachItem.invoiceDate.split("-")[0]==endYear))
-    console.log(listNew)
+  
+    const listNew=allDetails.filter(eachItem=>eachItem.invoiceDate.split("-")[0]==requiredDate)
+   
     if(listNew.length>0){
       this.setState({allDetails:listNew,detailsToShow:true})
     }
@@ -124,7 +121,7 @@ class App extends Component{
 
   render() {
     const { invoiceNumber, invoiceAmount, invoiceDate,enteredDate,allDetails ,detailsToShow} = this.state;
-    const {RangePicker}= DatePicker;
+    // const {RangePicker}= DatePicker;
     return (
       <div className="background">
         <div className="form">
@@ -173,8 +170,8 @@ class App extends Component{
       <div className="showInvoiceDetails">
         <h1 className="heading">Invoice Details</h1>
         <label htmlFor="enterDate" className="inputDesign">Find Invoice based on Year</label>
-        {/* <input type="date" value={enteredDate} onChange={this.savedDate} id="enterDate"/> */}
-        <RangePicker placeholder="select date" onChange={this.savedDate} className="rangePicker" />
+        <input type="date" value={enteredDate} onChange={this.savedDate} id="enterDate"/>
+        {/* <RangePicker placeholder="select date" onChange={this.savedDate} className="rangePicker" /> */}
         <button className="findButton" id="details" onClick={this.getDetailsOnYear}>Find</button>
         
        
