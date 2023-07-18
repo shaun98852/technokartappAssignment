@@ -1,13 +1,21 @@
 import {Component} from "react"
+// import Popup from 'reactjs-popup'
+import { DatePicker } from 'antd'
+
+
 
 import "./App.css"
 class App extends Component{
+
+ 
+
   state={
     invoiceNumber: '',
     invoiceAmount: '',
     invoiceDate: '',
     allDetails:[],
-    enteredDate:''
+    enteredDate:'',
+    detailsToShow:true
   }
 
   componentDidMount(){
@@ -15,20 +23,23 @@ class App extends Component{
   }
 
   arrangeList=(detailsFinal)=>{
-    console.log(detailsFinal)
+   
     const newDetails=detailsFinal.map(eachItem=>({
       invoiceNumber:eachItem.invoice_Number,
       invoiceDate:eachItem.invoice_Date,
       invoiceAmount:eachItem.invoice_Amount
     }))
 
+
+
     this.setState({allDetails:newDetails})
   }
 
   showInvoiceDetails= async ()=>{
+ 
     const details=await fetch("http://localhost:9000/technoKartapp")
     const finalDetails = await details.json()
-    console.log(finalDetails)
+   
 
     if(details.ok===true){
        this.arrangeList(finalDetails)
@@ -36,14 +47,10 @@ class App extends Component{
       
 
     }
-    // const finalDetails= await details.json()
-    
-    // console.log(finalDetails)
+
   }
 
-  // handleChange = (e) => {
-  //   this.setState({ [e.target.name]: e.target.value });
-  // };
+ 
 
   enterNumber=(event)=>{
     this.setState({invoiceNumber:event.target.value})
@@ -55,53 +62,73 @@ class App extends Component{
   }
 
   enterDate=(event)=>{
+    
     this.setState({invoiceDate:event.target.value})
   }
 
   savedDate=(event)=>{
-    this.setState({enteredDate:event.target.value})
+    console.log(event)
+    console.log(event[0].$d.getFullYear())
+    const startYear=event[0].$d.getFullYear()
+    const endYear=event[1].$d.getFullYear()
+    this.setState({enteredDate:[startYear,endYear]})
+  }
+
+  deleteInvoice=async (Item)=>{
+    const {invoiceAmount,invoiceDate,invoiceNumber}= Item
+    const queryDetails= await fetch(`http://localhost:9000/delete?number=${invoiceNumber}&amount=${invoiceAmount}&date=${invoiceDate}`);
+    this.showInvoiceDetails();
   }
 
   getDetailsOnYear=async()=>{
-    const {enteredDate}=this.state
-    const dateSet=enteredDate.split("-");
-    const date=dateSet[0] 
-    const getDetails=await fetch(`http://localhost:9000/year?date=${date}`);
-    const detail= await getDetails.json();
-    console.log(detail)
-    if(getDetails.ok===true){
-      this.arrangeList(detail);
+    const {enteredDate,allDetails}=this.state
+    if(enteredDate!=""){
+
+    
+    const firstYear=enteredDate[0]
+    const endYear=enteredDate[1]
+    const listNew=allDetails.filter(eachItem=>(eachItem.invoiceDate.split("-")[0]==firstYear) || (eachItem.invoiceDate.split("-")[0]==endYear))
+    console.log(listNew)
+    if(listNew.length>0){
+      this.setState({allDetails:listNew,detailsToShow:true})
     }
+    else{
+      this.setState({detailsToShow:false})
+    }
+   
+
+  }
 
   }
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("hello")
+   
     // You can perform further validation or submit the form data to an API here
     const {invoiceNumber,invoiceAmount,invoiceDate}= this.state 
-    console.log(invoiceNumber);
-    console.log(invoiceAmount);
-    console.log(invoiceDate);
+
     const queryDetails= await fetch(`http://localhost:9000/details?number=${invoiceNumber}&amount=${invoiceAmount}&date=${invoiceDate}`);
-    const query= await queryDetails.json();
-    console.log(query); 
+    console.log(queryDetails);
 
     // Reset the form fields
+    if(queryDetails.ok===true){
     this.setState({
       invoiceNumber: '',
       invoiceAmount: '',
       invoiceDate: '',
   
-    });
+    },this.showInvoiceDetails);
+
+  }
   };
 
   render() {
-    const { invoiceNumber, invoiceAmount, invoiceDate,enteredDate } = this.state;
-
+    const { invoiceNumber, invoiceAmount, invoiceDate,enteredDate,allDetails ,detailsToShow} = this.state;
+    const {RangePicker}= DatePicker;
     return (
       <div className="background">
         <div className="form">
+        
           <div className="detailsBox">
             <h1 className="detailsHeading">
               Enter Details
@@ -143,16 +170,41 @@ class App extends Component{
       </form>
 
 
-      <div className="showInvoiceDetaisl">
+      <div className="showInvoiceDetails">
         <h1 className="heading">Invoice Details</h1>
-        <label htmlFor="enterDate" className="inputDesign">Select Date</label>
-        <input type="date" value={enteredDate} onChange={this.savedDate} id="enterDate"/>
-        <div className="buttonBox">
-        <label htmlFor="details" className="inputDesign">Find Details based on year</label>
+        <label htmlFor="enterDate" className="inputDesign">Find Invoice based on Year</label>
+        {/* <input type="date" value={enteredDate} onChange={this.savedDate} id="enterDate"/> */}
+        <RangePicker placeholder="select date" onChange={this.savedDate} className="rangePicker" />
         <button className="findButton" id="details" onClick={this.getDetailsOnYear}>Find</button>
-        </div>
+        
+       
       </div>
-      
+        
+
+        {/* Display the invoices */}
+        <div className="invoices">
+          <div className="headings">
+            <p>Invoice No</p>
+            <p>Invoice Amount</p>
+            <p>Invoice Date</p>
+            <p>Edit/Delete</p>
+          </div>
+          {detailsToShow? <ul className="unList">
+            {allDetails.map(eachItem=>{
+
+              return(<li className="listItem"><p className="eachItem">{eachItem.invoiceNumber}</p>
+              <p className="eachItem">{eachItem.invoiceAmount}</p>
+              <p className="eachItem">{eachItem.invoiceDate}</p>
+              <div className="buttons">
+              <button className="editButton">Edit</button>
+                   
+              <button className="deleteButton" onClick={()=>(this.deleteInvoice(eachItem))}>Delete</button>
+              </div>
+              </li>)
+            })}
+          </ul>:<div className="noDetailsBackground">
+            <h1 className="noDetailsHeading">No Invoice Details Found</h1></div>}
+        </div>
       
       </div>
       </div>

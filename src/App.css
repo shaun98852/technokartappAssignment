@@ -41,10 +41,12 @@
 
 .background{
   background-image:linear-gradient(to right, #1F7B6C,#228D7B);
-  height:100vh;
+  min-height:100vh;
   display:flex;
   justify-content: center;
   align-items: center;
+  padding-top:5%;
+  padding-bottom:5%;
 }
 
 .form{
@@ -52,7 +54,7 @@
   width:60%;
   min-height:80%;
   margin:auto;
-  padding-left:5%;
+  padding-left:3%;
 
 
 }
@@ -67,39 +69,93 @@
 .buttonBox{
   
 }
-.form{
+.invoices{
+margin-right:5px;
   
 }
-.form{
+
+.showInvoiceDetails{
+  margin-bottom:10px;
+  
   
 }
-.form{
+.headings{
+  display:flex;
+  justify-content: space-around;
+  align-items: center;
+  font-style:roboto;
+  font-weight:bold;
+  margin-bottom:0px;
+  background-color: gray;
+  height:40px;
+
+  
+}
+.unList{
+  padding-left:0px;
+  margin-top:0px;
 
 }
-.form{
+.listItem{
+  display:flex;
+  justify-content: space-around;
+  align-items:center;
+  padding-left:3%;
+  padding-right:3%;
+  margin-bottom:0px;
+  margin-top:0px;
+}
+
+.editButton{
+  height:20px;
+  margin-right:5px;
+  background-color:#50C878;
+  border-style:none;
+  border-radius:5px;
+  color:#ffffff;
   
 }
-.form{
+.deleteButton{
+  height:20px;
+  background-color:#EA3C53;
+  border-style:none;
+  border-radius:5px;
+  color:#ffffff;
   
 }
-.form{
-  
-}
-.form{
-  
-}
-.form{
+.eachItem{
+  width:25%;
+ 
 
 }
-.form{
+.findButton{
+  margin-left:5px;
   
 }
-.form{
+.noDetailsBackground{
+  text-align:center;
   
 }
-.form{
+.noDetailsHeading{
+  font-family:roboto;
+  opacity:80%;
+
   
 }
-.form{
+.popupContainer{
+  background-color:#ffffff;
+  border-radius:5px;
+  height:300px;
+  width:600px;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   
+}
+
+.rangePicker{
+  border-style:solid;
+  border-color:black;
+
 }
